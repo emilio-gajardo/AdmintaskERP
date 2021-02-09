@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="1000" pageHeight="612" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="59e7fece-7873-453c-a2cd-6d98a8a9515f">
+	<property name="ireport.zoom" value="1.9487171000000123"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="71"/>
+	<parameter name="nombreCliente" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    CLIENTE.NOMBRE,
+    PROCESO.NOMBRE PROCESOS, 
+    PROCESO.DIAS_PRE_INTERVENCION TIEMPO_PRE_INTERVENCION,
+    (MAX(FUNCION.FECHA_TERMINO) - MIN(FUNCION.FECHA_INICIO)) TIEMPO_ACTUAL,
+    (PROCESO.DIAS_PRE_INTERVENCION)-((MAX(FUNCION.FECHA_TERMINO) - MIN(FUNCION.FECHA_INICIO))) DIAS_DE_DIFERENCIA,
+
+     ROUND ((( ((PROCESO.DIAS_PRE_INTERVENCION)-((MAX(FUNCION.FECHA_TERMINO) - MIN(FUNCION.FECHA_INICIO))))  /  PROCESO.DIAS_PRE_INTERVENCION ) * 100), 1) RENDIMIENTO
+
+FROM 
+    PROCESO PROCESO JOIN FUN_PROC FUN_PROC ON FUN_PROC.PROCESO_ID_PROCESO = PROCESO.ID_PROCESO
+                    JOIN FUNCION FUNCION ON FUNCION.ID_FUNCION = FUN_PROC.FUNCION_ID_FUNCION
+                    JOIN UNIDAD UNIDAD ON UNIDAD.ID_UNIDAD = FUNCION.UNIDAD_ID_UNIDAD
+                    JOIN CLIENTE CLIENTE ON CLIENTE.ID_CLIENTE = UNIDAD.CLIENTE_ID_CLIENTE
+
+WHERE CLIENTE.NOMBRE LIKE $P{nombreCliente}
+
+GROUP BY CLIENTE.NOMBRE, PROCESO.NOMBRE, PROCESO.DIAS_PRE_INTERVENCION
+ORDER BY PROCESO.NOMBRE ASC]]>
+	</queryString>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="PROCESOS" class="java.lang.String"/>
+	<field name="TIEMPO_PRE_INTERVENCION" class="java.math.BigDecimal"/>
+	<field name="TIEMPO_ACTUAL" class="java.math.BigDecimal"/>
+	<field name="DIAS_DE_DIFERENCIA" class="java.math.BigDecimal"/>
+	<field name="RENDIMIENTO" class="java.math.BigDecimal"/>
+	<group name="GrupoProcesos">
+		<groupExpression><![CDATA[$F{PROCESOS}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="105" splitType="Stretch">
+			<staticText>
+				<reportElement x="412" y="64" width="78" height="29" forecolor="#333333" uuid="fc209e4e-3231-4dbf-901a-ad3e1d455b31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="490" y="64" width="193" height="29" forecolor="#333333" uuid="83090530-12c6-4661-b920-1592c45aaada"/>
+				<textElement verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="0" width="960" height="64" backcolor="#37448C" uuid="aa785ca2-52e2-4941-976b-3a852d3899d9"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="337" y="0" width="287" height="61" forecolor="#FFFFFF" uuid="1d7050bc-4f73-48d3-96fd-62dc6fe3a9b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte 
+Procesos]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="796" y="24" width="144" height="20" forecolor="#FFFFFF" uuid="c69cdf6b-8e5d-4b9b-8060-95dbef87612e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<rectangle>
+				<reportElement x="117" y="1" width="702" height="41" backcolor="#EDEDED" uuid="d4b7d60d-8b7e-4fbc-a18e-af5bfa8be215"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="117" y="0" width="165" height="42" uuid="b7155316-1277-4ec6-98e5-ef93803bf322"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="0" width="166" height="42" uuid="4804fa4b-fa76-484c-bcfc-10d0f95b53a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIEMPO PRE INTERVENCIÓN 
+EN DÍAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="0" width="168" height="42" uuid="1856548d-7e3a-45b7-bb78-21bc43a59c2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIEMPO EJECUCIÓN ACTUAL
+EN DÍAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="614" y="0" width="105" height="42" uuid="72466c83-cc01-459e-b4d0-760d21a8fe0e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DÍAS DE
+DIFERENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="719" y="0" width="100" height="42" uuid="079bdaff-6afe-4f1a-ab20-b322144f1eff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RENDIMIENTO %]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement x="117" y="19" width="702" height="1" forecolor="#CCCCCC" uuid="0fdd9f21-5676-43db-a170-aab5e05cc8ee"/>
+			</line>
+			<textField>
+				<reportElement x="117" y="0" width="165" height="20" uuid="f4875763-1886-4292-a992-6907c03af138"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PROCESOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="0" width="166" height="20" uuid="e9cc5777-6f72-46f3-9b34-9d3ee3f4fed8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TIEMPO_PRE_INTERVENCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="448" y="0" width="166" height="20" uuid="147df74f-a3c9-429e-ba89-982291be49bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TIEMPO_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="0" width="102" height="20" uuid="3f79f39e-6333-4cb0-b352-741e2c053473"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DIAS_DE_DIFERENCIA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement x="719" y="0" width="100" height="20" uuid="5f485a65-f4e3-4c45-8387-106fc9358d3f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RENDIMIENTO}.toBigInteger()+" %"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="960" height="20" isPrintInFirstWholeBand="true" backcolor="#37448C" uuid="c1db03cc-1c80-40b0-acce-eef02181cadd"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="440" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="f75df4d0-16d2-4ee6-b124-2f6de979ec08"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="520" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="3e4b4ba8-27ec-4366-bb62-32866b09dd94"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="860" y="1" width="100" height="20" forecolor="#FFFFFF" uuid="672d894e-3162-4219-bc69-e0162d96d2b2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="304" splitType="Stretch">
+			<elementGroup/>
+			<bar3DChart>
+				<chart>
+					<reportElement x="520" y="87" width="440" height="215" uuid="f578bc9b-cce3-4677-89a7-452033d6cbbc"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Tiempo pre intervención"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PROCESOS}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{TIEMPO_PRE_INTERVENCION}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Tiempo ejecución actual"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PROCESOS}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{TIEMPO_ACTUAL}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<staticText>
+				<reportElement x="332" y="14" width="300" height="29" forecolor="#333333" uuid="dd18df4c-8c5d-40e8-9de9-a45e6f908eed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Indicadores de rendimiento]]></text>
+			</staticText>
+			<bar3DChart>
+				<chart>
+					<reportElement x="0" y="87" width="412" height="215" uuid="f2de7ba4-1576-461b-9092-a5c055461671"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Rendimiento"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PROCESOS}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{RENDIMIENTO}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Días de diferencia"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PROCESOS}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{DIAS_DE_DIFERENCIA}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<staticText>
+				<reportElement x="70" y="43" width="300" height="29" forecolor="#333333" uuid="4d6fb56d-c794-4d31-97e7-93fd041e36a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Rendimiento vs Días]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="43" width="300" height="29" forecolor="#333333" uuid="75cfdb1c-4cf9-4278-b1d4-d4b5a531c2ad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Tiempo pre intervención vs Tiempo actual]]></text>
+			</staticText>
+			<line>
+				<reportElement x="135" y="0" width="661" height="1" forecolor="#CCCCCC" uuid="5f96fc12-70df-4e3d-8ff3-f76a7487f744"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

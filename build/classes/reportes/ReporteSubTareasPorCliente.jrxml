@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="1570" pageHeight="842" columnWidth="1530" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c149ce5f-cd60-402a-9ff6-cc3469c3a1ad">
+	<property name="ireport.zoom" value="1.2100000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nombreCliente" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     USUARIO.NOMBRE||' '||USUARIO.APELLIDO_PATERNO AS RESPONSABLE,
+     CLIENTE.NOMBRE AS CLIENTE,
+     UNIDAD.NOMBRE_DEPARTAMENTO AS DEPARTAMENTO,
+     FUNCION.NOMBRE AS FUNCION,
+     PROCESO.NOMBRE AS PROCESO,
+     TAREA.ID_TAREA AS ID_TAREA,
+     TAREA.NOMBRE AS TAREA,
+     TAREA.FECHA_INICIO AS FECHA_INICIO,
+     TAREA.FECHA_TERMINO AS FECHA_TERMINO,
+     TAREA.DESCRIPCION AS DESCRIPCION_DE_TAREA,
+     ESTADO.DESCRIPCION AS ESTADO_TAREA,
+     SUBTAREA.ID_SUBTAREA AS ID_SUBTAREA,
+     SUBTAREA.NOMBRE AS SUBTAREA,
+     SUBTAREA.FINALIZADO AS ESTADO_SUBTAREA,
+     ROL.DESCRIPCION AS ROL
+FROM
+     TAREA TAREA JOIN SUBTAREA SUBTAREA ON TAREA.ID_TAREA = SUBTAREA.TAREA_ID_TAREA
+     JOIN FUNCION FUNCION ON TAREA.FUNCION_ID_FUNCION = FUNCION.ID_FUNCION
+     JOIN ESTADO ESTADO ON TAREA.ESTADO_ID_ESTADO = ESTADO.ID_ESTADO
+     JOIN USUARIO USUARIO ON TAREA.ENCARGADO = USUARIO.ID_USUARIO
+     JOIN ROL ROL ON USUARIO.ROL_ID_ROL = ROL.ID_ROL
+     AND ESTADO.ID_ESTADO = FUNCION.ESTADO_ID_ESTADO
+     JOIN UNIDAD UNIDAD ON FUNCION.UNIDAD_ID_UNIDAD = UNIDAD.ID_UNIDAD
+     JOIN FUN_PROC FUN_PROC ON FUN_PROC.FUNCION_ID_FUNCION = FUNCION.ID_FUNCION     
+     JOIN PROCESO PROCESO ON FUN_PROC.PROCESO_ID_PROCESO = PROCESO.ID_PROCESO   
+     JOIN CLIENTE CLIENTE ON UNIDAD.CLIENTE_ID_CLIENTE = CLIENTE.ID_CLIENTE
+
+WHERE CLIENTE.NOMBRE LIKE $P{nombreCliente}
+
+ORDER BY
+     FUNCION ASC,
+     PROCESO ASC,
+     ID_TAREA ASC,
+     ID_SUBTAREA ASC]]>
+	</queryString>
+	<field name="RESPONSABLE" class="java.lang.String"/>
+	<field name="CLIENTE" class="java.lang.String"/>
+	<field name="DEPARTAMENTO" class="java.lang.String"/>
+	<field name="FUNCION" class="java.lang.String"/>
+	<field name="PROCESO" class="java.lang.String"/>
+	<field name="ID_TAREA" class="java.math.BigDecimal"/>
+	<field name="TAREA" class="java.lang.String"/>
+	<field name="FECHA_INICIO" class="java.sql.Timestamp"/>
+	<field name="FECHA_TERMINO" class="java.sql.Timestamp"/>
+	<field name="DESCRIPCION_DE_TAREA" class="java.lang.String"/>
+	<field name="ESTADO_TAREA" class="java.lang.String"/>
+	<field name="ID_SUBTAREA" class="java.math.BigDecimal"/>
+	<field name="SUBTAREA" class="java.lang.String"/>
+	<field name="ESTADO_SUBTAREA" class="java.lang.String"/>
+	<field name="ROL" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="118" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="1520" height="64" backcolor="#37448C" uuid="a67edbfe-a0f2-407d-abd7-e2bcb02b15ee"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="1361" y="22" width="159" height="20" forecolor="#FFFFFF" uuid="1bf9a411-50f5-4b9a-b328-88381414ebf6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="544" y="0" width="432" height="61" forecolor="#FFFFFF" uuid="a0cd9b16-fb32-49a0-90e8-633a189b76f1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte 
+Detalle de Subtareas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="764" y="81" width="193" height="29" uuid="104c9ff6-e1bb-408c-969b-f92d5ea93929"/>
+				<textElement verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreCliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="686" y="81" width="78" height="29" uuid="73ea25fe-f9a6-4785-86e3-1c89e940c3a2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente: ]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="55" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="12" width="1520" height="39" backcolor="#EDEDED" uuid="50e39759-b05d-465b-a614-963674dd6c8b"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="12" width="100" height="39" uuid="ace1e5a3-26db-487c-b49f-87bbaba6ff69"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="12" width="100" height="39" uuid="9a207654-4fa8-4d73-9b1b-ebcc570d66a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPARTAMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="12" width="100" height="39" uuid="651e8f2f-3317-4e79-b21e-ee600b73f5a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="12" width="100" height="39" uuid="4c2cab7e-d014-4af6-83b9-b7df230900ad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FUNCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="12" width="52" height="39" uuid="71a9d795-a23c-4769-b4db-d90fd8a05973"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID
+TAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="452" y="12" width="100" height="39" uuid="8d44b2af-a050-4714-a2e1-8d85e24e427d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="552" y="12" width="100" height="39" uuid="cd1e4446-87c5-4a75-8d63-4c3d99f5a6ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA
+INICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="652" y="12" width="100" height="39" uuid="0606e49e-eb3c-459e-9314-f625f0110e46"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA
+TERMINO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="752" y="12" width="188" height="39" uuid="ff0e2e35-6eac-41cf-9a1e-4b572e45a1ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION
+DE TAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="940" y="12" width="100" height="39" uuid="9df35ef4-40b8-4a0a-b3d8-142346c6a68e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO
+DE TAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1040" y="12" width="54" height="39" uuid="5e22f16c-e962-4b66-b3e8-35493d586c3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID
+SUBTAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1094" y="12" width="136" height="39" uuid="9018130d-01ac-4505-89ec-83189965d4bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUBTAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1230" y="12" width="90" height="39" uuid="d4feb9ac-ad53-4c96-83e8-5f3c3f99af94"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO
+SUBTAREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1320" y="12" width="100" height="39" uuid="6f42857f-3f64-4744-ba4a-66b0d0b1b927"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1420" y="12" width="100" height="39" uuid="4bce058e-7458-4a95-9b0b-858af6f701cf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ROL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="69" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="55" uuid="f965bd29-561a-49c7-84f4-cb07b046f77f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="55" uuid="b4e037b5-b541-4ff4-801f-ded09b487850"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="55" uuid="d5de05f3-fcc9-476b-8a7a-78b82c6d37fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FUNCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="55" uuid="39d1dc8c-b6b6-487b-b79e-140c9962ee54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PROCESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="52" height="55" uuid="e13fe75c-fd39-46eb-ab43-3665465da045"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ID_TAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="0" width="100" height="55" uuid="9b31d710-dd06-4c6d-85a6-d90a0ab1a32f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="552" y="0" width="100" height="55" uuid="b2f42f5d-0109-43c8-b99d-1c8eb00ace63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHA_INICIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="652" y="0" width="100" height="55" uuid="2085e6e7-7829-48e7-9359-1d2e3c843019"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHA_TERMINO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="752" y="0" width="188" height="55" uuid="db1c21ed-f920-49be-92f8-6d6df9497efc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION_DE_TAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="940" y="0" width="100" height="55" uuid="ed9547af-2330-44ba-8afa-9c0893bf0272"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ESTADO_TAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1040" y="0" width="54" height="55" uuid="5a1e07e3-a72e-4ab6-956d-555846aaecad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ID_SUBTAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1094" y="0" width="136" height="55" uuid="d62c7286-ec64-4a4d-b3fa-50f951c2547c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SUBTAREA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1230" y="0" width="90" height="55" uuid="b6bb4573-34b3-44a9-b201-0970e6718e9d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{ESTADO_SUBTAREA}.equals("0")?"Incompleto":
+    ($F{ESTADO_SUBTAREA}.equals("1")?"Terminado":
+        "N/A"))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1320" y="0" width="100" height="55" uuid="2bd29215-666c-425a-ab64-70c08fd68f9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RESPONSABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1420" y="0" width="100" height="55" uuid="d52128e7-4a8e-4a24-9558-2d78be5e8503"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ROL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="60" width="1520" height="1" backcolor="#EDEDED" uuid="d00129eb-0fb4-45b0-9cf7-d8aaf60389bd"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="1520" height="20" isPrintInFirstWholeBand="true" backcolor="#37448C" uuid="d0a3cc12-f25f-4853-b644-4152b226ac64"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="1420" y="0" width="100" height="20" forecolor="#FFFFFF" uuid="e9794d32-b521-41a9-aeda-1f24d3427bfc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="800" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="10bf1fe3-72e8-4b5e-939f-1b2a2e8686bc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="720" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="b47f147c-875e-4e10-96db-2e89feef9085"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
