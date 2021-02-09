@@ -1,6 +1,5 @@
 - Fecha de creación: 30-09-2020
 - Autor: Emilio Gajardo
-- Autor: Kevin Marshall
 - Modelo de dearrollo: Arquiectura multinivel o Programaión por capas
 - Documento: Documentación del sistema
 
